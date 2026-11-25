@@ -142,3 +142,25 @@ dialog.upgrade{inset:0}
   .sticky-cta{animation:none}
   .quick-grid article,.bonus-row,.plan{transition:none}
 }
+
+/* ============================================================
+   Correção — SOMENTE os 2 cards de "O que você recebe"
+   Capas inteiras, proporção original, sem cortes.
+   (Sobrescreve alturas fixas e object-fit:cover das regras
+   anteriores; não afeta nenhuma outra seção.)
+   ============================================================ */
+.quick-grid img{
+  width:100%;
+  height:auto;
+  object-fit:contain;
+  object-position:center;
+  border-radius:10px;
+  background:#0b110c;
+}
+@media(max-width:650px){
+  .quick-grid img{
+    width:100%;
+    height:auto;
+    object-fit:contain;
+  }
+}
