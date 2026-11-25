@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useState } from "react";
 import "./nutri.css";
 
 /* ============================================================
@@ -17,7 +17,7 @@ const CHECKOUT_LINKS = {
   upgrade: "https://pay.cakto.com.br/yo6vjof",
 };
 
-/* Artes do carrossel de preview (feed) — versões em alta qualidade (1080×1350) */
+/* Artes em alta qualidade (1080×1350) — as únicas imagens da página */
 const FEED_IMAGES = [
   "hq-feed-1.webp",
   "hq-feed-2.webp",
@@ -30,12 +30,12 @@ const FEED_IMAGES = [
 
 /* Os 6 bônus do pacote Final */
 const BONUSES: Array<{ img: string; title: string; description: string }> = [
-  { img: "v5-cover-3.webp", title: "+45 artes para feed e carrossel", description: "Mais opções de publicação para variar o feed." },
-  { img: "v5-cover-4.webp", title: "+20 artes para carrosséis", description: "Sequências extras para desenvolver assuntos em etapas." },
-  { img: "v5-cover-5.webp", title: "Calendário de Conteúdo", description: "Uma base para planejar o que postar ao longo do período." },
-  { img: "v5-cover-6.webp", title: "Organizador de Feed", description: "Ajuda para distribuir as artes com harmonia no perfil." },
-  { img: "v5-cover-7.webp", title: "Guia Paleta de Cores", description: "Referência para escolher e combinar as cores do conteúdo." },
-  { img: "v5-cover-8.webp", title: "eBook", description: "Leitura complementar incluída no pacote." },
+  { img: "hq-feed-2.webp", title: "+45 artes para feed e carrossel", description: "Mais opções de publicação para variar o feed." },
+  { img: "hq-feed-4.webp", title: "+20 artes para carrosséis", description: "Sequências extras para desenvolver assuntos em etapas." },
+  { img: "hq-feed-5.webp", title: "Calendário de Conteúdo", description: "Uma base para planejar o que postar ao longo do período." },
+  { img: "hq-feed-7.webp", title: "Organizador de Feed", description: "Ajuda para distribuir as artes com harmonia no perfil." },
+  { img: "hq-feed-6.webp", title: "Guia Paleta de Cores", description: "Referência para escolher e combinar as cores do conteúdo." },
+  { img: "hq-feed-1.webp", title: "eBook", description: "Leitura complementar incluída no pacote." },
 ];
 
 /* Comentários de clientes */
@@ -49,20 +49,37 @@ const COMMENTS: Array<{ name: string; city: string; quote: string }> = [
 ];
 
 export default function NutriSalesPage() {
-  const dialogRef = useRef<HTMLDialogElement>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [showStickyCta, setShowStickyCta] = useState(false);
 
-  const openUpgradeDialog = () => {
-    dialogRef.current?.showModal();
-  };
+  /* CTA fixo mobile: aparece após o hero, some quando a oferta está visível */
+  useEffect(() => {
+    const onScroll = () => {
+      const hero = document.querySelector<HTMLElement>(".hero");
+      const offer = document.getElementById("oferta");
+      if (!hero || !offer) return;
+      const pastHero = hero.getBoundingClientRect().bottom < 0;
+      const offerRect = offer.getBoundingClientRect();
+      const offerVisible = offerRect.top < window.innerHeight * 0.75 && offerRect.bottom > 0;
+      setShowStickyCta(pastHero && !offerVisible);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const goToCheckout = (type: keyof typeof CHECKOUT_LINKS) => {
     const url = CHECKOUT_LINKS[type];
     if (url) window.location.assign(url);
   };
 
+  const openDialog = () => {
+    document.getElementById("upgradeDialog")?.showModal();
+  };
+
   const handleStarterClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    openUpgradeDialog();
+    openDialog();
   };
 
   const handleFinalClick = (e: React.MouseEvent) => {
@@ -75,13 +92,7 @@ export default function NutriSalesPage() {
     goToCheckout("upgrade");
   };
 
-  const handleKeepStarter = () => {
-    goToCheckout("starter");
-  };
-
-  const handleDialogBackdrop = (e: React.MouseEvent<HTMLDialogElement>) => {
-    if (e.target === dialogRef.current) dialogRef.current?.close();
-  };
+  const stickyVisible = showStickyCta && !dialogOpen;
 
   return (
     <>
@@ -100,6 +111,11 @@ export default function NutriSalesPage() {
             <a className="button" href="#por-dentro">
               Veja o material por dentro
             </a>
+            <div className="hero-stage" aria-hidden="true">
+              <img src="assets/hq-feed-2.webp" alt="" loading="lazy" />
+              <img src="assets/hq-feed-4.webp" alt="" loading="lazy" />
+              <img src="assets/hq-feed-6.webp" alt="" loading="lazy" />
+            </div>
             <div className="hero-points">
               <span>✓ Acesso digital</span>
               <span>✓ Edite no Canva</span>
@@ -146,7 +162,7 @@ export default function NutriSalesPage() {
             <div className="quick-grid">
               <article>
                 { }
-                <img src="assets/v5-cover-1.webp" alt="Conteúdo Pronto para Nutricionistas: artes e legendas" loading="lazy" />
+                <img src="assets/hq-feed-1.webp" alt="Conteúdo Pronto para Nutricionistas: artes e legendas" loading="lazy" />
                 <h3>Conteúdo Pronto para Nutricionistas</h3>
                 <p>
                   Artes e legendas como ponto de partida. Personalize fotos, cores e textos no Canva; o Final libera mais
@@ -155,7 +171,7 @@ export default function NutriSalesPage() {
               </article>
               <article>
                 { }
-                <img src="assets/v5-cover-2.webp" alt="Stories Prontos para Nutricionistas: roteiros em PDF" loading="lazy" />
+                <img src="assets/hq-feed-3.webp" alt="Stories Prontos para Nutricionistas: roteiros em PDF" loading="lazy" />
                 <h3>Stories Prontos para Nutricionistas</h3>
                 <p>Roteiros em PDF para você saber o que dizer e manter a conversa com seu público.</p>
               </article>
@@ -227,37 +243,13 @@ export default function NutriSalesPage() {
               </h2>
             </div>
             <div className="plans">
-              <article className="plan">
-                <span className="label">Essencial</span>
-                <h3>Starter</h3>
-                <p>Feed + roteiros de Stories para começar.</p>
-                <div className="plan-art plan-art-v6">
-                  { }
-                  <img
-                    src="assets/v6-starter.webp"
-                    alt="Composição visual do pacote Starter para nutricionistas"
-                    loading="lazy"
-                  />
-                </div>
-                <ul>
-                  <li>Artes para feed com legendas</li>
-                  <li>Roteiros de Stories em PDF</li>
-                  <li>Aulas para baixar e editar</li>
-                </ul>
-                <div className="price">R$ 19,90</div>
-                <a href={CHECKOUT_LINKS.starter} className="button" onClick={handleStarterClick}>
-                  Quero o Starter
-                </a>
-                <p className="micro">Pagamento único · Acesso digital</p>
-              </article>
-
               <article className="plan featured">
                 <span className="label">Mais escolhido</span>
                 <h3>Final</h3>
                 <p>Todos os formatos + 6 bônus.</p>
-                <div className="plan-art plan-art-v6">
+                <div className="plan-art">
                   { }
-                  <img src="assets/v6-final.webp" alt="Composição visual do pacote Final para nutricionistas" loading="lazy" />
+                  <img src="assets/hq-feed-5.webp" alt="Arte de exemplo do pacote Final para nutricionistas" loading="lazy" />
                 </div>
                 <ul>
                   <li>Feed com legendas + roteiros de Stories</li>
@@ -273,6 +265,26 @@ export default function NutriSalesPage() {
                 <div className="price">R$ 47,90</div>
                 <a href={CHECKOUT_LINKS.final} className="button" onClick={handleFinalClick}>
                   Quero o Final
+                </a>
+                <p className="micro">Pagamento único · Acesso digital</p>
+              </article>
+
+              <article className="plan">
+                <span className="label">Essencial</span>
+                <h3>Starter</h3>
+                <p>Feed + roteiros de Stories para começar.</p>
+                <div className="plan-art">
+                  { }
+                  <img src="assets/hq-feed-2.webp" alt="Arte de exemplo do pacote Starter para nutricionistas" loading="lazy" />
+                </div>
+                <ul>
+                  <li>Artes para feed com legendas</li>
+                  <li>Roteiros de Stories em PDF</li>
+                  <li>Aulas para baixar e editar</li>
+                </ul>
+                <div className="price">R$ 19,90</div>
+                <a href={CHECKOUT_LINKS.starter} className="button" onClick={handleStarterClick}>
+                  Quero o Starter
                 </a>
                 <p className="micro">Pagamento único · Acesso digital</p>
               </article>
@@ -337,19 +349,34 @@ export default function NutriSalesPage() {
         <div className="wrap">Conteúdo Pronto para Nutricionistas · Todos os direitos reservados.</div>
       </footer>
 
+      {/* CTA fixo (mobile) */}
+      <div className="sticky-cta" aria-hidden={!stickyVisible} style={{ display: stickyVisible ? "flex" : "none" }}>
+        <div className="sticky-cta-info">
+          <span className="sticky-cta-title">Pacote Final</span>
+          <span className="sticky-cta-sub">Todos os formatos + 6 bônus · R$ 47,90</span>
+        </div>
+        <a href={CHECKOUT_LINKS.final} className="button">
+          Quero o Final
+        </a>
+      </div>
+
       {/* Oferta de recuperação (upgrade) */}
-      <dialog className="upgrade" ref={dialogRef} aria-label="Oferta de pacote completo" onClick={handleDialogBackdrop}>
-        <button
-          className="close"
-          aria-label="Fechar"
-          onClick={() => dialogRef.current?.close()}
-        >
+      <dialog
+        className="upgrade"
+        id="upgradeDialog"
+        aria-label="Oferta de pacote completo"
+        onToggle={(e) => setDialogOpen((e.target as HTMLDialogElement).open)}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) e.currentTarget.close();
+        }}
+      >
+        <button className="close" aria-label="Fechar" onClick={(e) => e.currentTarget.closest("dialog")?.close()}>
           ×
         </button>
         <div className="upgrade-inner">
           <div className="upgrade-art">
             { }
-            <img src="assets/v6-final.webp" alt="Pacote Final" />
+            <img src="assets/hq-feed-5.webp" alt="Pacote Final" />
           </div>
           <div className="upgrade-copy">
             <span className="label">Antes de continuar</span>
@@ -361,7 +388,12 @@ export default function NutriSalesPage() {
             <a href={CHECKOUT_LINKS.upgrade} className="button" onClick={handleAcceptUpgrade}>
               Sim, quero o Final por R$ 34,90
             </a>
-            <button className="text-button" onClick={handleKeepStarter}>
+            <button
+              className="text-button"
+              onClick={() => {
+                goToCheckout("starter");
+              }}
+            >
               Continuar com o Starter por R$ 19,90
             </button>
             <p className="pending" aria-live="polite">
