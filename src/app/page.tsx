@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./nutri.css";
 
 /* ============================================================
@@ -50,6 +50,23 @@ const COMMENTS: Array<{ name: string; city: string; quote: string }> = [
 
 export default function NutriSalesPage() {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const [showStickyCta, setShowStickyCta] = useState(false);
+
+  /* CTA fixo mobile: aparece após o hero, some na seção de ofertas */
+  useEffect(() => {
+    const onScroll = () => {
+      const hero = document.querySelector<HTMLElement>(".hero");
+      const offer = document.getElementById("oferta");
+      if (!hero || !offer) return;
+      const pastHero = hero.getBoundingClientRect().bottom < 0;
+      const offerRect = offer.getBoundingClientRect();
+      const offerVisible = offerRect.top < window.innerHeight * 0.75 && offerRect.bottom > 0;
+      setShowStickyCta(pastHero && !offerVisible);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const openUpgradeDialog = () => {
     dialogRef.current?.showModal();
@@ -93,6 +110,11 @@ export default function NutriSalesPage() {
             <h1>
               Seu Instagram com conteúdo pronto para <span className="accent">adaptar e publicar.</span>
             </h1>
+            <div className="hero-stage" aria-hidden="true">
+              <img src="assets/hq-feed-2.webp" alt="" />
+              <img src="assets/hq-feed-5.webp" alt="" />
+              <img src="assets/hq-feed-7.webp" alt="" />
+            </div>
             <p>
               Sem tempo ou ideias para criar posts? Receba artes, legendas e roteiros prontos para editar no Canva,
               colocar sua identidade e publicar com mais rapidez.
@@ -336,6 +358,17 @@ export default function NutriSalesPage() {
       <footer>
         <div className="wrap">Conteúdo Pronto para Nutricionistas · Todos os direitos reservados.</div>
       </footer>
+
+      {/* CTA fixo (mobile) */}
+      <div className="sticky-cta" style={{ display: showStickyCta ? "flex" : "none" }}>
+        <div className="sticky-cta-info">
+          <span className="sticky-cta-title">Pacote Final</span>
+          <span className="sticky-cta-sub">Todos os formatos + 6 bônus · R$ 47,90</span>
+        </div>
+        <a href={CHECKOUT_LINKS.final} className="button">
+          Quero o Final
+        </a>
+      </div>
 
       {/* Oferta de recuperação (upgrade) */}
       <dialog className="upgrade" ref={dialogRef} aria-label="Oferta de pacote completo" onClick={handleDialogBackdrop}>

@@ -43,3 +43,102 @@ dialog.upgrade{inset:0}
   .upgrade .button{min-height:54px}
   .text-button{padding:16px 10px}
 }
+
+/* ============================================================
+   Camada de melhorias (escopo restrito) — preserva os estilos
+   originais acima; nada de regras globais de imagem.
+   ============================================================ */
+
+/* ---------- Pílulas verdes translúcidas ---------- */
+.label{
+  display:inline-block;background:#41f45414;border-color:#41f4542e;
+  border-radius:999px;padding:7px 14px;
+}
+.hero-points span{
+  background:#ffffff0d;border:1px solid #2e3a30;border-radius:999px;padding:8px 15px;
+}
+
+/* ---------- Vitrine do hero (leque de 3 artes) ---------- */
+.hero-stage{
+  position:relative;display:flex;justify-content:center;align-items:center;
+  height:clamp(230px,42vw,400px);margin:clamp(22px,4vw,34px) auto 0;overflow:hidden;
+}
+.hero-stage:before{
+  content:"";position:absolute;bottom:-38%;left:50%;transform:translateX(-50%);
+  width:520px;height:300px;background:#1cf03d4d;filter:blur(95px);border-radius:50%;pointer-events:none;
+}
+.hero-stage img{
+  position:relative;width:auto;height:clamp(165px,29vw,295px);aspect-ratio:4/5;object-fit:cover;
+  border:4px solid #f3f6f1;border-radius:8px;box-shadow:0 22px 34px #000a;
+}
+.hero-stage img:nth-child(1){z-index:1;transform:rotate(-9deg) translate(clamp(12px,4vw,32px),12px)}
+.hero-stage img:nth-child(2){z-index:3;transform:translateY(-10px)}
+.hero-stage img:nth-child(3){z-index:1;transform:rotate(9deg) translate(calc(clamp(12px,4vw,32px) * -1),12px)}
+.hero-short p{margin-top:clamp(22px,4vw,26px)}
+
+/* ---------- Cards de posts: 4:5, moldura clara, sombra ---------- */
+.post{
+  height:auto;width:clamp(158px,42vw,197px);aspect-ratio:4/5;
+  border:5px solid #e9ebe7;border-radius:12px;
+}
+.post img{width:100%;height:100%;object-fit:cover}
+
+/* ---------- Tipografia fluida ---------- */
+.section{padding:clamp(48px,8vw,72px) 0}
+.hero-short{padding:clamp(48px,8vw,74px) 0 clamp(36px,6vw,56px)}
+.hero-short p{margin:clamp(16px,3vw,22px) auto clamp(18px,3.5vw,26px)}
+
+/* ---------- Grids progressivos ---------- */
+.quick-grid{grid-template-columns:1fr;gap:14px}
+@media(min-width:560px){
+  .quick-grid{grid-template-columns:1fr 1fr;gap:18px}
+}
+
+/* ---------- Hover suave (somente dispositivos com mouse) ---------- */
+@media(hover:hover){
+  .button:hover{transform:translateY(-3px);box-shadow:0 12px 30px #0afd2c55}
+  .quick-grid article{transition:transform .25s,border-color .25s}
+  .quick-grid article:hover{transform:translateY(-4px);border-color:#5a8562}
+  .bonus-row{transition:transform .25s,border-color .25s}
+  .bonus-row:hover{transform:translateY(-3px);border-color:#67946f}
+  .plan{transition:transform .25s,box-shadow .25s}
+  .plan.featured:hover{transform:translateY(-4px)}
+}
+
+/* ---------- Ordem dos planos: Final primeiro apenas no mobile ---------- */
+@media(max-width:649px){
+  .plans .plan.featured{order:-1}
+  .plans{gap:15px}
+}
+
+/* ---------- Modal: rolagem interna segura ---------- */
+.upgrade{margin:auto;max-height:calc(100dvh - 28px);overflow:auto}
+.upgrade-copy{padding:clamp(26px,6vw,34px)}
+.upgrade h2{font-size:clamp(1.55rem,5.2vw,2rem)}
+.upgrade-price{font-size:clamp(1.9rem,6vw,2.5rem)}
+
+/* ---------- CTA fixo mobile ---------- */
+.sticky-cta{
+  position:fixed;left:12px;right:12px;z-index:60;
+  bottom:calc(12px + env(safe-area-inset-bottom));
+  display:none;align-items:center;justify-content:space-between;gap:14px;
+  padding:12px 12px 12px 18px;border-radius:16px;
+  background:#101711f2;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid #3f5442;box-shadow:0 16px 44px #000b;
+  animation:stickyIn .32s ease;
+}
+.sticky-cta-info{display:flex;flex-direction:column;line-height:1.25;text-align:left}
+.sticky-cta-title{font-weight:800;font-size:.92rem}
+.sticky-cta-sub{color:var(--muted);font-size:.72rem}
+.sticky-cta .button{min-height:48px;padding:11px 22px;font-size:.88rem;flex:0 0 auto}
+@keyframes stickyIn{from{transform:translateY(20px);opacity:0}to{transform:none;opacity:1}}
+@media(max-width:859px){
+  body{padding-bottom:76px}
+}
+@media(min-width:860px){
+  .sticky-cta{display:none!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .sticky-cta{animation:none}
+  .quick-grid article,.bonus-row,.plan{transition:none}
+}
