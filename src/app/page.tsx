@@ -17,18 +17,15 @@ const CHECKOUT_LINKS = {
   upgrade: "https://pay.cakto.com.br/yo6vjof",
 };
 
-/* Artes do carrossel de preview (feed) */
+/* Artes do carrossel de preview (feed) — versões em alta qualidade (1080×1350) */
 const FEED_IMAGES = [
-  "previa-habitos.webp",
-  "previa-mitos.webp",
-  "previa-compulsao.webp",
-  "previa-hidratacao.webp",
-  "previa-reducao.webp",
-  "previa-suplementos.webp",
-  "previa-geladeira.webp",
-  "v3-post-1.webp",
-  "v3-post-2.webp",
-  "v3-post-3.webp",
+  "hq-feed-1.webp",
+  "hq-feed-2.webp",
+  "hq-feed-3.webp",
+  "hq-feed-4.webp",
+  "hq-feed-5.webp",
+  "hq-feed-6.webp",
+  "hq-feed-7.webp",
 ];
 
 /* Os 6 bônus do pacote Final */
